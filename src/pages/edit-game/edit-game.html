@@ -1,0 +1,188 @@
+<!--
+  Generated template for the EditGamePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>edit-game</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <ion-card class="player-card">
+        <ion-grid>
+          <ion-row>
+            <ion-col col-2>
+              <img [src]="'assets/imgs/player/' + report.player.imgName + '.png'" />
+            </ion-col>
+            <ion-col col-8>
+              <div class="player-info">
+                <div class="details">{{report.player.name}}</div>
+                <div class="details">vs {{game.opponent}}</div>
+              </div>
+            </ion-col>
+            <ion-col col-2>
+              <button style="background: none; border: none" (click)="toggleGameForm()">
+                <i class="material-icons md-36 md-primary">
+                  expand_more
+                </i>
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    
+      <ion-card [formGroup]="gameForm" *ngIf="gameFormVisible">
+    
+        <ion-card-content>
+          <ion-list padding-bottom>
+            <ion-item>
+              <ion-label fixed>Opponent</ion-label>
+              <ion-input type="text" formControlName="opponent"></ion-input>
+            </ion-item>
+          </ion-list>
+          <ion-list padding-bottom>
+            <ion-item>
+              <ion-label fixed>Competition</ion-label>
+              <ion-input type="text" formControlName="competition"></ion-input>
+            </ion-item>
+          </ion-list>
+          <ion-list>
+            <ion-item>
+              <ion-label style="display: flex; align-items: center; justify-content: space-between">
+                Pick Date
+                <i class="material-icons md-primary"> date_range</i>
+              </ion-label>
+              <ion-datetime displayFormat="D.MM.YYYY." pickerFormat="D.MM.YYYY." formControlName="date"></ion-datetime>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+    
+        <!-- <ion-row no-padding>
+          <ion-col text-right>
+            <button ion-button clear small color="primary" icon-start (click)="saveGameInfo()" >
+              <ion-icon name="share-alt"></ion-icon>
+              Save
+            </button>
+          </ion-col>
+        </ion-row> -->
+    
+    
+      </ion-card>
+    
+      <ion-card>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col col-4 *ngFor="let effect of generateStats(['goals','assists','key passes'])">
+                <button class="stat-btn height-60em" (click)="increaseEffectValue(effect)">
+                  <div class="stat-img size-50em">
+                    <ion-badge item-end style="margin-left: 1em" *ngIf="effect.value > 0">{{effect.value}}</ion-badge>
+                    <img [src]="'/assets/imgs/game/' + effect.statistics + '.png'" class="size-45em">
+                  </div>
+                  <ion-badge>{{effect.statistics}}</ion-badge>
+                </button>
+              </ion-col>
+            </ion-row>
+    
+            <ion-row margin-top>
+              <ion-col col-3 *ngFor="let effect of generateStats(['yellow cards','red cards','own goals','missed penalties'])">
+                <button class="stat-btn height-50em" (click)="increaseEffectValue(effect)">
+                  <div class="stat-img size-40em">
+                    <ion-badge item-end style="margin-left: 1em" *ngIf="effect.value > 0">{{effect.value}}</ion-badge>
+                    <img [src]="'/assets/imgs/game/' + effect.statistics + '.png'" class="size-35em">
+                  </div>
+                  <ion-badge style="overflow-wrap: break-word">{{ getShortEffectTitle(effect.statistics)}}</ion-badge>
+                </button>
+              </ion-col>
+            </ion-row>
+    
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    
+      <ion-card>
+        <ion-card-content>
+          <ion-row>
+            <ion-col col-6 *ngFor="let effect of generateStats(['lost ball','bad control'])">
+              <button class="stat-btn height-50em" (click)="increaseEffectValue(effect)">
+                <div class="stat-img size-40em">
+                  <ion-badge item-end style="margin-left: 1em" *ngIf="effect.value > 0">{{effect.value}}</ion-badge>
+                  <img [src]="'/assets/imgs/game/' + effect.statistics + '.png'" class="size-35em">
+                </div>
+                <ion-badge>{{effect.statistics}}</ion-badge>
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    
+      <ion-card>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row *ngFor="let effect of generateSpecificStats()" class="spec-stat">
+              <ion-col col-4>
+                <button class="spec-stat-btn" (click)="increaseEffectValue(effect.positive)">
+                  <div class="thumb">
+                    <ion-badge color="secondary" class="positive-badge">{{effect.positive.value}}</ion-badge>
+                    <i class="material-icons md-primary md-48">
+                      thumb_up
+                    </i>
+                  </div>
+                </button>
+              </ion-col>
+              <ion-col col-4>
+                <div class="stat-btn">
+                  <div class="stat-img">
+                    <img src="/assets/imgs/game/specific.png" class="size-35em">
+                  </div>
+                  <ion-badge style="margin-top: -1em; z-index: 100">{{effect.title | uppercase}}</ion-badge>
+                </div>
+                <!-- <ion-badge color="primary">{{effect.title}}</ion-badge> -->
+              </ion-col>
+              <ion-col col-4>
+                <button class="spec-stat-btn" (click)="increaseEffectValue(effect.negative)">
+                  <ion-badge color="primary" class="negative-badge">{{effect.negative.value}}</ion-badge>
+                  <div class="thumb">
+                    <i class="material-icons md-secondary md-48">
+                      thumb_down
+                    </i>
+                  </div>
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    
+      <ion-list>
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 1em">
+          <div style="font-size: 1em">Minutes played ({{ minutes }})</div>
+        </div>
+        <ion-item>
+          <ion-range min="0" max="90" step="1" [(ngModel)]="minutes" color="primary">
+            <div range-left>0</div>
+            <div range-right>90</div>
+          </ion-range>
+        </ion-item>
+      </ion-list>
+    
+      <ion-list>
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 1em">
+          <b style="font-size: 1.5em">Rating ({{ (rating/10).toFixed(2) }})</b>
+        </div>
+        <ion-item>
+          <ion-range min="0" max="100" step="1" [(ngModel)]="rating" color="primary">
+            <ion-icon range-left small name="stats"></ion-icon>
+            <ion-icon range-right name="stats"></ion-icon>
+          </ion-range>
+        </ion-item>
+      </ion-list>
+    
+      <button ion-button block outline (click)="saveGame()">SAVE GAME</button>
+</ion-content>

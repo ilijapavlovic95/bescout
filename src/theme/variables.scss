@@ -4,7 +4,48 @@
 // Font path is used to include ionicons,
 // roboto, and noto sans fonts
 $font-path: "../assets/fonts";
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url($font-path + '/MaterialIcons-Regular.eot'); /* For IE6-8 */
+  src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url($font-path + '/MaterialIcons-Regular.woff2') format('woff2'),
+    url($font-path + '/MaterialIcons-Regular.woff') format('woff'),
+    url($font-path + '/MaterialIcons-Regular.ttf') format('truetype');
+}
 
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}
+
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-primary { color: #176957; }
+.material-icons.md-primary.md-inactive { color: #176957ad; }
+.material-icons.md-secondary { color: #fdcb6e; }
+.material-icons.md-secondary.md-inactive { color: #fdcb6eb2; }
 
 // The app direction is used to include
 // rtl styles in your app. For more info, please see:
@@ -34,8 +75,8 @@ $app-direction: ltr;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #488aff,
-  secondary:  #32db64,
+  primary:    #176957,
+  secondary:  #fdcb6e,
   danger:     #f53d3d,
   light:      #f4f4f4,
   dark:       #222
@@ -46,14 +87,16 @@ $colors: (
 // --------------------------------------------------
 // iOS only Sass variables can go here
 
-
+$card-ios-margin-left: 0;
+$card-ios-margin-right: 0;
 
 
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
 
-
+$card-md-margin-left: 0;
+$card-md-margin-right: 0;
 
 
 // App Windows Variables

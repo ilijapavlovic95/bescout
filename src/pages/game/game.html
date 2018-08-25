@@ -1,0 +1,74 @@
+<!--
+  Generated template for the GamePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-buttons left>
+      <button ion-button clear (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>vs {{game.opponent}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+
+  <ion-card>
+    <ion-item-group>
+      <ion-item-divider color="light">Game Info</ion-item-divider>
+      <ion-item>
+        <h4>Opponent</h4>
+        <b item-end>{{game.opponent}}</b>
+      </ion-item>
+      <ion-item>
+        <h4>Competition</h4>
+        <b item-end>{{game.competition}}</b>
+      </ion-item>
+      <ion-item>
+        <h4>Competition</h4>
+        <b item-end>{{game.date | dateFormat}}</b>
+      </ion-item>
+    </ion-item-group>
+    <ion-item-group>
+      <ion-item-divider color="light">Basic Stats
+      </ion-item-divider>
+      <ion-item>
+        <div class="stat-header">
+          <div class="stat" *ngFor="let stat of generateBasicStatsValues()">
+            <div class="title">
+              <b>{{stat.title}}</b>
+            </div>
+            <div class="value">
+              <p>{{stat.value}}</p>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+    </ion-item-group>
+
+    <ion-item-group>
+      <ion-item-divider color="light">Advanced Stats
+      </ion-item-divider>
+      <ion-item>
+        <ion-label>Select Stat</ion-label>
+        <ion-select [(ngModel)]="selectedStat" interface="popover" (ionChange)="createPieChart()">
+          <ion-option [value]="statOption" *ngFor="let statOption of generateSpecificStats()">{{statOption.title}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <p style="width: 100%; text-align: center; font-size: 1em">{{selectedStat?.title}}</p>
+        <canvas #pieCanvas></canvas>
+      </ion-item>
+    </ion-item-group>
+
+  </ion-card>
+
+</ion-content>

@@ -1,0 +1,134 @@
+page-edit-game {
+    ion-item {
+        border-bottom: 1px solid color($colors, primary, base) !important;
+    }
+
+    ion-card {
+        background: color($colors, light, base);
+    }
+
+    .player-card {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 2.5em;
+        background: color($colors, secondary, base);
+
+        ion-col {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        img {
+            height: 2em;
+            width: 2em;
+            margin-left: 1em;
+        }
+        .player-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100%;
+            margin-top: 7px;
+            margin-bottom: 7px;
+            h4 {
+                color: color($colors, primary, base);
+                font-weight: 700;
+            }
+            .details {
+                color: color($colors, primary, base);
+                font-weight: 700;
+            }
+        }
+    }
+
+    .bottom-divider {
+        border-bottom: 2px solid color($colors, secondary, base);
+        padding-bottom: 1em;
+    }
+
+    .stat-btn {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        background: none;
+        .stat-img {
+            position: relative;
+            ion-badge {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+        }
+    }
+
+    .secondary-back {
+        background: color($colors, secondary, base) !important;
+    }
+
+    .height-60em {
+        height: 6em;
+    }
+    .height-50em {
+        height: 5em;
+    }
+    .height-40em {
+        height: 4em;
+    }
+    .height-30em {
+        height: 3em;
+    }
+    .size-50em {
+        height: 5em;
+        width: 5em;
+    }
+    .size-45em {
+        height: 4.5em;
+        width: 4.5em;
+    }
+    .size-40em {
+        height: 4em;
+        width: 4em;
+    }
+    .size-35em {
+        height: 3.5em;
+        width: 3.5em;
+    }
+    .size-30em {
+        height: 3em;
+        width: 3em;
+    }
+    .size-25em {
+        height: 2.5em;
+        width: 2.5em;
+    }
+
+
+    .spec-stat {
+        margin-bottom: 1em;
+        ion-col {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .spec-stat-btn {
+                border: none;
+                background: none;
+                position: relative;
+                .positive-badge {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                }
+                .negative-badge {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                }
+            }
+        }
+    }
+}
