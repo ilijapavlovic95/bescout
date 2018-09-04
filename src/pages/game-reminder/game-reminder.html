@@ -1,0 +1,72 @@
+<!--
+  Generated template for the GameReminderPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-buttons left>
+      <button ion-button clear (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Add Game Reminder</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-card class="player-card">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-2>
+          <img [src]="'assets/imgs/player/' + report.player.imgName + '.png'" />
+        </ion-col>
+        <ion-col col-8>
+          <div class="player-info">
+            <div class="details">{{report.player.name}}</div>
+            <div class="details">vs</div>
+          </div>
+        </ion-col>
+        <ion-col col-2>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+  <ion-card [formGroup]="gameForm">
+
+    <ion-card-content>
+      <ion-list padding-bottom>
+        <ion-item>
+          <ion-label fixed>Opponent</ion-label>
+          <ion-input type="text" formControlName="opponent"></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-list padding-bottom>
+        <ion-item>
+          <ion-label fixed>Competition</ion-label>
+          <ion-input type="text" formControlName="competition"></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-list>
+        <ion-item>
+          <ion-label style="display: flex; align-items: center; justify-content: space-between">
+            Pick Date
+            <i class="material-icons md-primary"> date_range</i>
+          </ion-label>
+          <ion-datetime displayFormat="D.MM.YYYY. HH:mm" pickerFormat="D.MM.YYYY. HH:mm" [max]="generateMaxDate()" [min]="generateMinDate()"
+            formControlName="date"></ion-datetime>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+
+  </ion-card>
+
+  <button ion-button outline block color="primary" (click)="createReminder()">CREATE REMINDER</button>
+
+</ion-content>

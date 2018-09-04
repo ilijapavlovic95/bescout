@@ -1,0 +1,23 @@
+page-home {
+
+    ion-content {
+        background: color($colors, secondary, base) !important;
+    }
+
+    .home-img {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        img {
+            height: 15em;
+            width: 15em;
+        }
+        p {
+            color: color($colors, primary, base);
+            letter-spacing: 2px;
+        }
+    }
+}

@@ -1,3 +1,6 @@
+import { AuthService } from './../../services/auth';
+import { SigninPage } from './../signin/signin';
+import { GameReminderPage } from './../game-reminder/game-reminder';
 import { EditGamePage } from './../edit-game/edit-game';
 import { ReportsService } from './../../services/reports';
 import { GamePage } from './../game/game';
@@ -6,8 +9,8 @@ import { Skill } from './../../models/skill';
 import { PlayerSearchPage } from './../player-search/player-search';
 import { MyReportService } from './../../services/my-report';
 import { PlayersService } from './../../services/players';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { IonicPage, NavController, NavParams, ModalController, LoadingController, AlertController, App } from 'ionic-angular';
 import { Player } from '../../models/player';
 import { FormControl } from '@angular/forms';
 import { PlayerPage } from '../player/player';
@@ -30,6 +33,7 @@ export class EditReportPage implements OnInit, OnDestroy {
   subscription: Subscription;
   subscriptionReport: Subscription;
   subscriptionUpdateReport: Subscription;
+  subscriptionEndReport: Subscription;
 
   playerPage = PlayerPage;
   mode: string = 'new';
@@ -46,7 +50,11 @@ export class EditReportPage implements OnInit, OnDestroy {
     private playersService: PlayersService,
     private myreportService: MyReportService,
     private reportsService: ReportsService,
-    private modalCtrl: ModalController) {
+    private modalCtrl: ModalController,
+    private authService: AuthService,
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController,
+    private app: App) {
   }
 
   ngOnInit(): void {
@@ -122,21 +130,31 @@ export class EditReportPage implements OnInit, OnDestroy {
   }
 
   decreaseSkillValue(skill) {
+    if (skill.value === 0)
+      return;
     skill.value--;
     this.reportsService.generateStarsArray(skill);
   }
 
   increaseSkillValue(skill) {
+    if (skill.value === 10)
+      return;
     skill.value++;
     this.reportsService.generateStarsArray(skill);
   }
 
   startScouting() {
+    const loading = this.loadingCtrl.create({
+      content: 'Saving ...'
+    });
+    loading.present();
     // saving report to db
     this.subscriptionReport = this.myreportService.saveReport(this.report).subscribe(
       data => {
         const report = data['report'];
         this.report._id = report._id;
+        this.reportsService.addMyReport(this.report);
+        loading.dismiss();
       },
       err => console.log(err)
     );
@@ -147,11 +165,71 @@ export class EditReportPage implements OnInit, OnDestroy {
   }
 
   updateReport() {
+    const loading = this.loadingCtrl.create({
+      content: 'Updating ...'
+    });
+    loading.present();
     this.subscriptionUpdateReport = this.myreportService.updateReport(this.report).subscribe(
-      (data) => console.log(data),
+      (data) => {
+        console.log(data);
+        loading.dismiss();
+      },
       (err) => console.log(err)
     );
   }
+
+  openGameReminderModal() {
+    const modal = this.modalCtrl.create(GameReminderPage, {report: this.report});
+    modal.present();
+  }
+
+  endReport() {
+    const alert = this.alertCtrl.create({
+      title: 'Do you really want to end this report?',
+      message: 'This action cannot be undone.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Confirm',
+          handler: () => {
+            this.endReportInDB();
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  endReportInDB() {
+    this.report.endDate = new Date();
+    const loading = this.loadingCtrl.create({
+      content: 'Updating...'
+    });
+    loading.present();
+    this.myreportService.updateReport(this.report).subscribe(
+      (data: any) => {
+        this.report.endDate = data.report.endDate;
+        loading.dismiss();
+      },
+      (err) => console.log(err)
+    );
+  }
+
+  // signout() {
+  //   console.log('signoout');
+  //   this.authService.signout()
+  //     .then((value) => {
+  //       const nav = this.app.getRootNav();
+  //       nav.setRoot(SigninPage);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
 
   ngOnDestroy(): void {
     if (this.subscription)
@@ -160,6 +238,8 @@ export class EditReportPage implements OnInit, OnDestroy {
       this.subscriptionReport.unsubscribe();
     if (this.subscriptionUpdateReport)
       this.subscriptionUpdateReport.unsubscribe();
+    if (this.subscriptionEndReport)
+      this.subscriptionEndReport.unsubscribe();
   }
 
 }

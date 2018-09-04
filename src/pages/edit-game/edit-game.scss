@@ -58,6 +58,8 @@ page-edit-game {
         background: none;
         .stat-img {
             position: relative;
+            display: flex;
+            justify-content: center;
             ion-badge {
                 position: absolute;
                 top: 0;
@@ -130,5 +132,9 @@ page-edit-game {
                 }
             }
         }
+    }
+
+    .primary-text {
+        color: color($colors, primary, base);
     }
 }

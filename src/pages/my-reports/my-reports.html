@@ -6,23 +6,28 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>my-reports</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>My Reports</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-end clear color="secondary" (click)="signout()">
+        Sign Out
+        <ion-icon name="log-out" color="secondary"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
+
+
 
 </ion-header>
 
 
 <ion-content padding>
 
-  <ion-list>
-    <ion-item *ngFor="let report of myReports">
-      {{ report.player.name }}
-      <button ion-button small outline color="primary" (click)="showReport(report, 'edit')">edit</button>
-      <button ion-button small outline color="primary" (click)="showReport(report, 'view')">view</button>
-    </ion-item>
-  </ion-list>
-
   <button ion-button block color="primary" [navPush]="editReportPage" [navParams]="{ mode: 'New' }">Create new report</button>
+
+
+  <ion-list>
+    <report-details *ngFor="let report of myReports" [report]="report" (viewClicked)="showReport(report, 'view')" (editClicked)="showReport(report, 'edit')"></report-details>
+  </ion-list>
 
 </ion-content>

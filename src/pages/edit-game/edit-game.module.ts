@@ -1,3 +1,4 @@
+import { PipesModule } from './../../pipes/pipes.module';
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { EditGamePage } from './edit-game';
@@ -8,6 +9,7 @@ import { EditGamePage } from './edit-game';
   ],
   imports: [
     IonicPageModule.forChild(EditGamePage),
+    PipesModule
   ],
 })
 export class EditGamePageModule {}

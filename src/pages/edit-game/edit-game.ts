@@ -5,7 +5,7 @@ import { MyReportService } from './../../services/my-report';
 import { Report } from './../../models/report';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Loading, LoadingController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 /**
@@ -24,9 +24,12 @@ export class EditGamePage {
 
   subscription: Subscription;
   subscriptionGame: Subscription;
+  subscriptionGetMyReports: Subscription;
   gameForm: FormGroup;
   gameFormVisible: boolean;
   specificStats = [];
+
+  myActiveReports: Report[];
 
   report: Report;
   game: Game;
@@ -38,11 +41,39 @@ export class EditGamePage {
     public navParams: NavParams,
     private myreportService: MyReportService,
     private reportsService: ReportsService,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController) {
   }
 
   ngOnInit(): void {
-    this.report = this.navParams.data.report;
+    if (this.navParams.data.report) {
+      this.report = this.navParams.data.report;
+      this.initialize();
+    } else {
+      const loading = this.loadingCtrl.create({
+        content: 'Please wait ...'
+      });
+      this.subscriptionGetMyReports = this.reportsService.getMyReports().subscribe(
+        (data) => {
+          const arr = this.reportsService.initializeReports(data);
+          this.myActiveReports = [];
+          for (const r of arr) {
+            if (!(r.endDate))
+              this.myActiveReports.push(r);
+          }
+          loading.dismiss();
+        },
+        (err) => {
+          loading.dismiss();
+          console.log(err);
+        }
+      );
+    }
+
+
+  }
+
+  initialize() {
     this.initializeGame();
     this.initializeStats();
     this.rating = 70;
@@ -66,8 +97,12 @@ export class EditGamePage {
           const stats = data.stats;
           for (const stat of stats) {
             let specific = true;
-            if (stat.position.length === 10 && !stat.title.startsWith('passes'))
+            if (stat.position.length >= 9 && !stat.title.startsWith('passes'))
               specific = false;
+            // u slucaju da se radi o golmanu
+            if (stat.title === 'saves' || stat.title === 'saved penalties' || stat.title === 'goals against')
+              specific = false;
+
             this.game.effect.push({
               statistics: stat.title,
               value: 0,
@@ -106,11 +141,26 @@ export class EditGamePage {
     }
   }
 
+  generateStatsForView(row: number) {
+    const position = this.report.player.position;
+    if (row === 1) {
+      if (position.toLowerCase() !== 'gk')
+        return this.generateStats(['goals', 'assists', 'key passes']);
+      else
+        return this.generateStats(['goals against', 'saves']);
+    }
+
+    if (row === 2) {
+      if (position.toLowerCase() !== 'gk')
+        return this.generateStats(['yellow cards', 'red cards', 'own goals', 'missed penalties']);
+      else
+        return this.generateStats(['yellow cards', 'red cards', 'own goals', 'saved penalties']);
+    }
+  }
+
   generateStats(statNames: string[]) {
     let arr = [];
     for (let statName of statNames) {
-      if (this.report.player.position === 'gk' && statName === 'missed penalties')
-        statName = 'saved penalties';
       for (const stat of this.game.effect) {
         if (stat.statistics === statName)
           arr.push(stat);
@@ -133,7 +183,7 @@ export class EditGamePage {
     if (title === 'yellow cards') return 'YC';
     if (title === 'red cards') return 'RC';
     if (title === 'own goals') return 'OwnG';
-    if (title === 'missed penalties') return 'PenMissed';
+    if (title === 'missed penalties') return 'PenM';
     if (title === 'saved penalties') return 'PenSaved';
     if (title == 'passes_positive') return 'Successful';
     if (title == 'passes_negative') return 'Unsuccessful';
@@ -158,19 +208,34 @@ export class EditGamePage {
       this.game.minutes = this.minutes;
       this.report.games.push(this.game);
       console.log(this.report);
+      const loading = this.loadingCtrl.create({
+        content: 'Saving game...'
+      });
+      loading.present();
       this.subscriptionGame = this.myreportService.saveGame(this.report, this.game)
         .subscribe(
-          data => console.log(data),
+          data => {
+            console.log(data);
+            loading.dismiss();
+            this.navCtrl.pop();
+          },
           err => console.log(err)
         );
     }
 
   }
 
+  goBack() {
+    this.navCtrl.popToRoot();
+  }
+
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription)
+      this.subscription.unsubscribe();
     if (this.subscriptionGame)
       this.subscriptionGame.unsubscribe();
+    if (this.subscriptionGetMyReports)
+      this.subscriptionGetMyReports.unsubscribe();
   }
 
 }

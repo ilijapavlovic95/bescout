@@ -6,13 +6,88 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>reports</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>Community Reports</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-end clear color="secondary" (click)="signout()">
+        Sign Out
+        <ion-icon name="log-out" color="secondary"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
+  <div *ngIf="!filterVisible">
+    <button ion-button clear color="primary" (click)="toggleFilter()">SHOW FILTER</button>
+  </div>
+  <div *ngIf="filterVisible">
+    <button ion-button clear color="primary" (click)="toggleFilter()">HIDE FILTER</button>
+  </div>
+  <ion-card [formGroup]="filterForm" *ngIf="filterVisible">
+    <ion-row no-padding>
+      <ion-col text-right>
+        <button ion-button clear small color="primary" (click)="clearFilter()">
+          CLEAR FILTER
+        </button>
+      </ion-col>
+    </ion-row>
+
+    <ion-card-content>
+      <ion-card-title>
+        <ion-list>
+          <ion-item>
+            <ion-label fixed>Player Name</ion-label>
+            <ion-input type="text" formControlName="name"></ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-card-title>
+      <ion-list padding-bottom>
+        <ion-item>
+          <ion-label fixed>Min Age</ion-label>
+          <ion-input type="number" formControlName="minAge"></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-list padding-bottom>
+        <ion-item>
+          <ion-label fixed>Max Age</ion-label>
+          <ion-input type="number" formControlName="maxAge"></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-list>
+        <ion-item>
+          <ion-label>Position</ion-label>
+          <ion-select formControlName="position">
+            <ion-option *ngFor="let pos of positions" value="{{pos}}">{{pos}}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+      <ion-list padding-bottom>
+        <ion-item>
+          <ion-label fixed>Min Games</ion-label>
+          <ion-input type="number" formControlName="minGames"></ion-input>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+
+    <ion-row no-padding>
+      <ion-col text-right>
+        <button ion-button clear large color="primary" icon-start (click)="searchReports()">
+          <ion-icon name="search"></ion-icon>
+          Search
+        </button>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
+
+  <p padding *ngIf="noReportsMessageVisible" text-center>There is no report which fulfill defined conditions.</p>
+
+  <ion-list>
+    <report-details *ngFor="let report of reports" [report]="report" (viewClicked)="showReport(report, 'view')"></report-details>
+  </ion-list>
 
 </ion-content>

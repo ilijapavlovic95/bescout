@@ -6,46 +6,82 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>{{mode}} Report</ion-title>
+    <!-- <ion-buttons end>
+      <button ion-button icon-end clear color="secondary" (click)="signout()">
+        Sign Out
+        <ion-icon name="log-out" color="secondary"></ion-icon>
+      </button>
+    </ion-buttons> -->
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding-top padding-bottom>
+<ion-content padding-bottom>
 
   <ion-card class="player-card" *ngIf="report.player">
-    <img [src]="'assets/imgs/player/' + report.player.imgName + '.png'" />
-    <div class="player-info">
-      <h1>{{report.player.name}}</h1>
-      <p>{{report.player.age}}, {{report.player.country}}</p>
-      <p>{{report.player.position}}, {{report.player.club}}</p>
-    </div>
-    <ion-row no-padding>
-      <ion-col text-right>
-        <button ion-button clear small color="primary" icon-start (click)="showSelectionDiv()" *ngIf="mode === 'New'">
-          <i class="material-icons">
-            cached
-          </i>
-        </button>
-      </ion-col>
-    </ion-row>
+    <ion-grid>
+      <ion-row no-padding no-margin style="height: 1em; margin-bottom: 12px">
+        <ion-col text-right>
+          <button ion-button clear small color="primary" icon-start (click)="showSelectionDiv()" *ngIf="mode === 'New' && !report._id">
+            <i class="material-icons">
+              cached
+            </i>
+          </button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-4>
+          <img [src]="'assets/imgs/player/' + report.player.imgName + '.png'" />
+        </ion-col>
+        <ion-col>
+          <div class="player-info">
+            <h1>{{report.player.name}}</h1>
+            <p>{{report.player.age}}, {{report.player.country}}</p>
+            <p>{{report.player.position}}, {{report.player.club}}</p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+  <ion-card *ngIf="report._id" padding-right>
+    <ion-grid>
+      <ion-row>
+        <ion-col col style="display: flex; align-items: center; justify-content: center">
+          SCOUTING {{ report.endDate ? 'FINISHED' : 'IN PROGRESS' }}
+        </ion-col>
+        <ion-col col-4 *ngIf="!report.endDate">
+          <button ion-button outline small color="primary" (click)="endReport()">END REPORT</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-card>
 
 
   <div *ngIf="!report.player">
     <ion-card class="player-card">
-      <img src="assets/imgs/player/default.png" />
-      <div class="player-info">
-        <h1>Name</h1>
-        <p>Years, Country</p>
-        <p>Position, Club</p>
-      </div>
+      <ion-row>
+        <ion-col col-4>
+          <img src="assets/imgs/player/default.png" />
+        </ion-col>
+        <ion-col>
+          <div class="player-info">
+            <h1>Name</h1>
+            <p>Years, Country</p>
+            <p>Position, Club</p>
+          </div>
+        </ion-col>
+      </ion-row>
     </ion-card>
-    <button ion-button block color="primary" (click)="openPlayerSearchModal()">SELECT EXISTING PLAYER</button>
-    <p style="width: 100%; text-align: center">or if you can't find him</p>
-    <button ion-button block color="primary" (click)="openNewPlayerModal()">ADD NEW ONE</button>
+    <div padding-left padding-right>
+      <button ion-button block color="primary" (click)="openPlayerSearchModal()">SELECT EXISTING PLAYER</button>
+      <p style="width: 100%; text-align: center">or if you can't find him</p>
+      <button ion-button block color="primary" (click)="openNewPlayerModal()">ADD NEW ONE</button>
+    </div>
+
   </div>
 
   <ion-card class="card-primary" *ngIf="report.player">
@@ -57,61 +93,69 @@
       <div class="skill" padding-bottom *ngFor="let skill of report.skills">
         <div class="title">{{skill.title}}</div>
         <div class="stars">
-          <button class="star-btn" (click)="decreaseSkillValue(skill)">
-            <i class="material-icons md-secondary">
-              remove_circle
-            </i>
+          <button class="star-btn" ion-button clear (click)="decreaseSkillValue(skill)" icon-only *ngIf="!report.endDate">
+              <ion-icon name="remove" color="secondary"></ion-icon>
           </button>
 
-          <i class="material-icons md-24 md-secondary" *ngFor="let iconName of skill.starsArray">
+          <ion-icon [name]="iconName" *ngFor="let iconName of skill.starsArray" color="secondary" style="font-size: 2em"></ion-icon>
+
+          <!-- <i class="material-icons md-24 md-secondary" *ngFor="let iconName of skill.starsArray">
             {{ iconName }}
-          </i>
-          <button class="star-btn" (click)="increaseSkillValue(skill)">
-            <i class="material-icons md-secondary">
-              add_circle
-            </i>
+          </i> -->
+          <button class="star-btn" ion-button clear (click)="increaseSkillValue(skill)" icon-only *ngIf="!report.endDate">
+              <ion-icon name="add" color="secondary"></ion-icon>
           </button>
         </div>
       </div>
-
+      <ion-row>
+        <ion-col text-right>
+          <button ion-button outline color="secondary" (click)="updateReport()" *ngIf="report._id && !report.endDate">
+            UPDATE SKILLS
+          </button>
+        </ion-col>
+      </ion-row>
     </ion-list>
+
   </ion-card>
 
   <div *ngIf="report.player">
-    <button ion-button block outline color="primary" (click)="startScouting()" *ngIf="!report._id; else elseTemplate">
-      START SCOUTING
-    </button>
-    <ng-template #elseTemplate>
-      <div>
-        <ion-card class="card-primary">
-          <ion-card-header>
-            Games
-          </ion-card-header>
+    <div padding-left padding-right>
+      <button ion-button block outline color="primary" (click)="startScouting()" *ngIf="!report._id">
+        START SCOUTING
+      </button>
+    </div>
+    <div *ngIf="report._id">
+      <ion-card class="card-primary">
+        <ion-card-header>
+          Games
+        </ion-card-header>
 
-          <div style="width: 100%; display: flex; justify-content: center">
-            <div class="games" padding-bottom>
-              <button class="game-btn" *ngFor="let game of report.games">
-                <div style="margin-bottom: 8px">{{game.opponent}}</div>
+        <div style="width: 100%; display: flex; justify-content: center">
+          <div class="games" padding-bottom>
+            <div class="game-btn" *ngFor="let game of report.games">
+              <div style="margin-bottom: 8px">{{game.opponent}}</div>
 
-                <div>{{game.rating}}</div>
+              <div>{{game.rating}}</div>
 
-              </button>
+            </div>
 
-              <button class="game-btn" (click)="addGame()">
-                <div>ADD</div>
-                <div>NEW</div>
-              </button>
+            <div class="game-btn" (click)="addGame()" *ngIf="!report.endDate">
+              <div>ADD</div>
+              <div>NEW</div>
             </div>
           </div>
+        </div>
 
-        </ion-card>
+        <ion-row margin>
+          <ion-col text-right>
+            <button text-right ion-button outline color="secondary" (click)="openGameReminderModal()" *ngIf="!report.endDate">
+              ADD GAME REMINDER
+            </button>
+          </ion-col>
+        </ion-row>
 
-      </div>
-
-      <button ion-button block outline color="primary" (click)="updateReport()">
-        UPDATE REPORT
-      </button>
-    </ng-template>
+      </ion-card>
+    </div>
 
 
   </div>

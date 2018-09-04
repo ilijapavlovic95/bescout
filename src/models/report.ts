@@ -3,6 +3,8 @@ import { Game } from "./game";
 
 export class Report {
 
+    public user: string;
+
     constructor(
         public _id: string,
         public startDate: Date,

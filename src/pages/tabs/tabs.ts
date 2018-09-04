@@ -1,3 +1,4 @@
+import { HomePage } from './../home/home';
 import { ReportsPage } from './../reports/reports';
 import { ReportPage } from './../report/report';
 import { MyReportsPage } from './../my-reports/my-reports';
@@ -19,6 +20,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class TabsPage {
 
+  homePage = HomePage;
   myReportsPage = MyReportsPage;
   reportsPage = ReportsPage;
 

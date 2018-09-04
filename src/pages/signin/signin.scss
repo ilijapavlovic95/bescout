@@ -1,0 +1,50 @@
+page-signin {
+
+    ion-content {
+        background: color($colors, secondary, base) !important;
+    }
+
+    #signin-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    h1 {
+        font-family: 'Jua', sans-serif;
+        color: color($colors, primary, base);
+    }
+
+    ion-list {
+        border-bottom: 1px solid color($colors, primary, base) !important;
+    }
+
+    ion-item {
+        background: color($colors, secondary, base) !important;
+        border: none !important;
+        ion-input {
+            color: color($colors, dark, base);
+        }
+    }
+
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: color($colors, primary, base) !important;
+        opacity: 1; /* Firefox */
+    }
+    
+    :-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: color($colors, primary, base) !important;
+    }
+    
+    ::-ms-input-placeholder { /* Microsoft Edge */
+        color: color($colors, primary, base) !important;
+    }
+
+    .validation {
+        color: color($colors, danger, base);
+    }
+
+}

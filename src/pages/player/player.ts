@@ -21,7 +21,7 @@ export class PlayerPage implements OnInit, OnDestroy{
 
   subscription: Subscription;
 
-  imgName: string = 'default'; // ovo treba da se menja kad se bira avatar
+  imgName: number = 3; // ovo treba da se menja kad se bira avatar
   playerForm: FormGroup;
   positions = ['GK','CB','RB','LB','DM','CM','AMC','AML','AMR','ST'];
 
@@ -51,6 +51,18 @@ export class PlayerPage implements OnInit, OnDestroy{
     this.viewCtrl.dismiss();
   }
 
+  previousAvatar() {
+    if (this.imgName === 1)
+      return;
+    this.imgName--;
+  }
+
+  nextAvatar() {
+    if (this.imgName === 4)
+      return;
+    this.imgName++;
+  }
+
   addPlayer() {
     if(this.playerForm.invalid) {
       const alert = this.alertCtrl.create({
@@ -61,7 +73,7 @@ export class PlayerPage implements OnInit, OnDestroy{
       alert.present();
     } else {
       const values = this.playerForm.value;
-      let player = new Player('0', values.name, values.position, values.club, values.country, values.age, this.imgName);
+      let player = new Player('0', values.name, values.position, values.club, values.country, values.age, this.imgName.toFixed(0));
       
       this.subscription = this.playersService.savePlayer(player).subscribe(
         data => {

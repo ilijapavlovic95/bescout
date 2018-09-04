@@ -1,0 +1,38 @@
+page-game-reminder {
+    .player-card {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 2.5em;
+        background: color($colors, secondary, base);
+
+        ion-col {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        img {
+            height: 2em;
+            width: 2em;
+            margin-left: 1em;
+        }
+        .player-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100%;
+            margin-top: 7px;
+            margin-bottom: 7px;
+            h4 {
+                color: color($colors, primary, base);
+                font-weight: 700;
+            }
+            .details {
+                color: color($colors, primary, base);
+                font-weight: 700;
+            }
+        }
+    }
+}

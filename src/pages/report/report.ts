@@ -1,7 +1,9 @@
+import { SigninPage } from './../signin/signin';
+import { AuthService } from './../../services/auth';
 import { GamePage } from './../game/game';
 import { Report } from './../../models/report';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, App } from 'ionic-angular';
 import { ReportsService } from '../../services/reports';
 import { Chart } from 'chart.js';
 
@@ -22,9 +24,12 @@ export class ReportPage implements OnInit {
   selectedStat: any;
   noGames: boolean;
   gamesVisible: boolean = false;
+  noDataMessageVisible: boolean = false;
 
   @ViewChild('pieCanvas') pieCanvas;
   pieChart: any;
+  @ViewChild('radarCanvas') radarCanvas;
+  radarChart: any;
 
   report: Report;
 
@@ -32,7 +37,9 @@ export class ReportPage implements OnInit {
     public navCtrl: NavController,
     public navParams: NavParams,
     private reportsService: ReportsService,
-    private modalCtrl: ModalController) {
+    private modalCtrl: ModalController,
+    private authService: AuthService,
+    private app: App) {
 
   }
 
@@ -47,7 +54,53 @@ export class ReportPage implements OnInit {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ReportPage');
+    this.initializeRadarChart();
   }
+
+  initializeRadarChart() {
+    let attributesTitles = [];
+    for (const skill of this.report.skills) {
+      attributesTitles.push(skill.title.toUpperCase());
+    }
+
+    let attributesValues = [];
+    for (const skill of this.report.skills) {
+      attributesValues.push(skill.value);
+    }
+
+    const attributesData = {
+      labels: attributesTitles,
+      datasets: [{
+        backgroundColor: 'rgba(23, 105, 87, 0.8)',
+        hoverBackgroundColor: '#176957',
+        data: attributesValues
+      }]
+    };
+
+    const chartOptions = {
+      scale: {
+        ticks: {
+          beginAtZero: true,
+          min: 0,
+          max: 10,
+          stepSize: 2
+        },
+        pointLabels: {
+          fontSize: 10
+        }
+      },
+      legend: {
+        display: false
+      }
+    };
+
+    this.radarChart = new Chart(this.radarCanvas.nativeElement, {
+      type: 'radar',
+      data: attributesData,
+      options: chartOptions
+    });
+  }
+
 
   getAverageRating() {
     let sum = 0;
@@ -58,7 +111,7 @@ export class ReportPage implements OnInit {
   }
 
   generateBasicStatsValues() {
-    return this.reportsService.generateBasicStatsValues(this.report);
+    return this.reportsService.generateBasicStatsValues(this.report, this.report.player.position);
   }
 
   generateSpecificStats() {
@@ -89,7 +142,11 @@ export class ReportPage implements OnInit {
   }
 
   createPieChart() {
-    console.log(this.selectedStat);
+    if (this.selectedStat.positiveValue === 0 && this.selectedStat.negativeValue == 0) {
+      this.noDataMessageVisible = true;
+      return;
+    }
+    this.noDataMessageVisible = false;
     this.pieChart = null;
     this.pieCanvas.innerHTML = '';
     this.pieChart = new Chart(this.pieCanvas.nativeElement, {
@@ -118,8 +175,18 @@ export class ReportPage implements OnInit {
   }
 
   showGameStats(game) {
-    const modal = this.modalCtrl.create(GamePage, {game: game});
+    const modal = this.modalCtrl.create(GamePage, { game: game, report: this.report });
     modal.present();
   }
+
+  // signout() {
+  //   console.log('signoout');
+  //   this.authService.signout()
+  //     .then((value) => {
+  //       const nav = this.app.getRootNav();
+  //       nav.setRoot(SigninPage);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
 
 }

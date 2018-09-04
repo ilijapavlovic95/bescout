@@ -1,3 +1,4 @@
+import { AuthService } from './auth';
 import { Skill } from './../models/skill';
 import { Injectable } from '@angular/core';
 import { Player } from '../models/player';
@@ -10,7 +11,7 @@ export class PlayersService {
     private players: Player[] = [];
 
     constructor(
-        private http: HttpClient
+        private http: HttpClient, private auth: AuthService
     ) { }
 
     fetchPlayers(): any {
@@ -20,7 +21,8 @@ export class PlayersService {
     savePlayer(player: Player): any {
         const httpOptions = {
             headers: new HttpHeaders({
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-auth-token': this.auth.getCurrentUser().getToken()
             })
         };
 

@@ -1,0 +1,43 @@
+<ion-card class="report-div">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col col-2>
+        <img [src]="'assets/imgs/player/' + report.player.imgName + '.png'">
+      </ion-col>
+      <ion-col col-10>
+        <h3 style="margin-top: 3px; letter-spacing: 3px">{{report.player.name | uppercase}}</h3>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-top: 1px solid gray; padding-top: 3px; padding-bottom: 3px">
+      <ion-col col-4>
+        <small text-center>{{report.player.age}} years old</small>
+      </ion-col>
+      <ion-col col-4>
+        <small text-center>{{report.player.position}} at {{report.player.club}}</small>
+      </ion-col>
+      <ion-col>
+        <small text-center>{{report.games.length}} {{report.games.length > 1 ? 'scouted games' : 'scouted game'}}</small>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-top: 1px solid gray; padding-top: 3px" *ngIf="!report.user">
+      <ion-col col-4>
+        <small>{{ getReportStatus() }}</small>
+      </ion-col>
+      <ion-col col>
+        <button ion-button clear color="primary" (click)="viewClicked.emit()">VIEW</button>
+      </ion-col>
+      <ion-col col-4 *ngIf="!report.endDate">
+        <button ion-button clear color="primary" (click)="editClicked.emit()">EDIT</button>
+      </ion-col>
+    </ion-row>
+    <ion-row style="border-top: 1px solid gray; padding-top: 3px" *ngIf="report.user">
+      <ion-col col-8>
+        <small style="width: 100%" text-center>CREATED BY: {{report.user}}</small>
+      </ion-col>
+      <ion-col>
+        <button ion-button clear color="primary" (click)="viewClicked.emit()">VIEW</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-card>

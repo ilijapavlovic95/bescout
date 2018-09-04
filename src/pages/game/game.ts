@@ -25,10 +25,12 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class GamePage implements OnInit, OnDestroy {
 
   selectedStat: any;
+  noDataMessageVisible: boolean = false;
 
   @ViewChild('pieCanvas') pieCanvas;
   pieChart: any;
 
+  report: Report;
   game: Game;
 
   constructor(
@@ -42,6 +44,7 @@ export class GamePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.game = this.navParams.get('game');
+    this.report = this.navParams.get('report');
     console.log(this.game);
   }
 
@@ -50,11 +53,16 @@ export class GamePage implements OnInit, OnDestroy {
   }
 
   generateBasicStatsValues() {
-    return this.reportsService.generateBasicStatsValues(this.game);
+    return this.reportsService.generateBasicStatsValues(this.game, this.report.player.position);
   }
 
   createPieChart() {
     console.log(this.selectedStat);
+    if (this.selectedStat.positive.value === 0 && this.selectedStat.negative.value === 0) {
+      this.noDataMessageVisible = true;
+      return;
+    }
+    this.noDataMessageVisible = false;
     this.pieChart = null;
     this.pieCanvas.innerHTML = '';
     this.pieChart = new Chart(this.pieCanvas.nativeElement, {

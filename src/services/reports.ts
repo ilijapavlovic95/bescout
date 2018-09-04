@@ -1,3 +1,4 @@
+import { AuthService } from './auth';
 import { Game } from './../models/game';
 import { Api } from './../constants/api';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
@@ -8,29 +9,56 @@ import { Report } from '../models/report';
 export class ReportsService {
 
   starsArray = [
-    ['star_border', 'star_border', 'star_border', 'star_border', 'star_border'],
-    ['star_half', 'star_border', 'star_border', 'star_border', 'star_border'],
-    ['star', 'star_border', 'star_border', 'star_border', 'star_border'],
-    ['star', 'star_half', 'star_border', 'star_border', 'star_border'],
-    ['star', 'star', 'star_border', 'star_border', 'star_border'],
-    ['star', 'star', 'star_half', 'star_border', 'star_border'],
-    ['star', 'star', 'star', 'star_border', 'star_border'],
-    ['star', 'star', 'star', 'star_half', 'star_border'],
-    ['star', 'star', 'star', 'star', 'star_border'],
-    ['star', 'star', 'star', 'star', 'star_half'],
+    ['star-outline', 'star-outline', 'star-outline', 'star-outline', 'star-outline'],
+    ['star-half', 'star-outline', 'star-outline', 'star-outline', 'star-outline'],
+    ['star', 'star-outline', 'star-outline', 'star-outline', 'star-outline'],
+    ['star', 'star-half', 'star-outline', 'star-outline', 'star-outline'],
+    ['star', 'star', 'star-outline', 'star-outline', 'star-outline'],
+    ['star', 'star', 'star-half', 'star-outline', 'star-outline'],
+    ['star', 'star', 'star', 'star-outline', 'star-outline'],
+    ['star', 'star', 'star', 'star-half', 'star-outline'],
+    ['star', 'star', 'star', 'star', 'star-outline'],
+    ['star', 'star', 'star', 'star', 'star-half'],
     ['star', 'star', 'star', 'star', 'star'],
   ];
 
   private myReports: Report[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private auth: AuthService) { }
 
   setMyReports(reports: Report[]): void {
     this.myReports = reports;
   }
 
   getMyReports(): any {
-    return this.http.get(Api.URI + 'reports');
+    return this.http.get(Api.URI + 'reports/' + this.auth.getCurrentUser()._id);
+  }
+
+  addMyReport(report) {
+    this.myReports.push(report);
+  }
+
+  getCommunityReports(filter: any): any {
+    let query = '';
+    if (filter.name) query += `?name=${filter.name}`;
+    if (filter.position && filter.position.toLowerCase() !== 'no filter') {
+      if (query === '') query += `?position=${filter.position}`;
+      else query += `&position=${filter.position}`;
+    }
+    if (filter.minAge) {
+      if (query === '') query += `?minAge=${filter.minAge}`;
+      else query += `&minAge=${filter.minAge}`;
+    }
+    if (filter.maxAge) {
+      if (query === '') query += `?maxAge=${filter.maxAge}`;
+      else query += `&maxAge=${filter.maxAge}`;
+    }
+    if (filter.minGames) {
+      if (query === '') query += `?minGames=${filter.minGames}`;
+      else query += `&minGames=${filter.minGames}`;
+    }
+
+    return this.http.get(Api.URI + 'reports' + query);
   }
 
   generateStarsArray(skill) {
@@ -78,12 +106,16 @@ export class ReportsService {
     return false;
   }
 
-  generateBasicStatsValues(obj: any) {
+  generateBasicStatsValues(obj: any, position: string) {
+    if (position.toLowerCase() === 'gk')
+      return this.generateBasicStatsValuesForGK(obj);
+
     let statNames = ['GP', 'MPG', 'G', 'A', 'AR'];
 
     // obj moze biti Report ili Game
     // ako ne postoji report.games onda znaci da je u pitanju game
     if (!obj.games) {
+      statNames = ['GP', 'MIN', 'G', 'A', 'R'];
       const game: Game = obj;
       return [
         { title: statNames[0], value: 1 },
@@ -120,19 +152,102 @@ export class ReportsService {
 
     return [
       { title: statNames[0], value: games },
-      { title: statNames[1], value: (sumMinutes / games).toFixed(2) || 0 },
+      { title: statNames[1], value: ((sumMinutes / games) || 0).toFixed(2) },
       { title: statNames[2], value: goals },
       { title: statNames[3], value: assists },
-      { title: statNames[4], value: (sumRating / games).toFixed(2) || 0 }
+      { title: statNames[4], value: ((sumRating / games) || 0).toFixed(2) }
+    ];
+  }
+
+  generateBasicStatsValuesForGK(obj) {
+    let statNames = ['GP', 'MPG', 'CS', 'SPG', 'AR'];
+
+    // obj moze biti Report ili Game
+    // ako ne postoji report.games onda znaci da je u pitanju game
+    if (!obj.games) {
+      statNames = ['GP', 'MIN', 'CS', 'S', 'R'];
+      const game: Game = obj;
+      return [
+        { title: statNames[0], value: 1 },
+        { title: statNames[1], value: game.minutes.toFixed(2) },
+        {
+          title: statNames[2], value: (game.effect.find((stat) => {
+            return stat.statistics === 'goals against'
+          })).value > 0 ? 0 : 1
+        },
+        {
+          title: statNames[3], value: (game.effect.find((stat) => {
+            return stat.statistics === 'saves'
+          })).value
+        },
+        { title: statNames[4], value: game.rating.toFixed(2) }
+      ];
+    }
+
+    const report: Report = obj;
+    let games = 0;
+    let sumMinutes = 0;
+    let cleanSheets = 0;
+    let sumSaves = 0;
+    let sumRating = 0
+    for (const game of report.games) {
+      for (const stat of game.effect) {
+        if (stat.statistics === 'goals against' && stat.value === 0) cleanSheets++;
+        if (stat.statistics === 'saves') sumSaves += stat.value;
+      }
+      sumMinutes += game.minutes;
+      sumRating += game.rating;
+      games++;
+    }
+
+    return [
+      { title: statNames[0], value: games },
+      { title: statNames[1], value: ((sumMinutes / games) || 0).toFixed(2) },
+      { title: statNames[2], value: cleanSheets },
+      { title: statNames[3], value: ((sumSaves / games) || 0).toFixed(2) },
+      { title: statNames[4], value: ((sumRating / games) || 0).toFixed(2) }
     ];
   }
 
   generateLabelsForPieChart(selectedStat: any): string[] {
-    if (selectedStat.title === 'passes') return ['Successfull', 'Unsuccessfull'];
     if (selectedStat.title === 'shots') return ['On Target', 'Off Target'];
-    if (selectedStat.title === 'dribbles') return ['Successfull', 'Unsuccessfull'];
-    if (selectedStat.title === 'aerial duels') return ['Successfull', 'Unsuccessfull'];
-    if (selectedStat.title === 'crosses') return ['Successfull', 'Unsuccessfull'];
+
+    return ['Successfull', 'Unsucessfull'];
+  }
+
+  initializeReports(data) {
+    console.log(data.reports);
+    this.myReports = [];
+    const dbReports = data.reports;
+    for (const report of dbReports) {
+      let skills = [];
+      for (const dbSkill of report.skills) {
+        let skill = { title: dbSkill.skill, value: dbSkill.value };
+        this.generateStarsArray(skill);
+        skills.push(skill);
+      }
+
+      let games: Game[] = [];
+      for (const dbGame of report.games) {
+        let min = 90;
+        if (dbGame.minutes)
+          min = dbGame.minutes;
+        const game = new Game(dbGame._id, dbGame.opponent, dbGame.competition, new Date(dbGame.date), dbGame.rating, min, dbGame.effect);
+        games.push(game);
+      }
+
+      let endDate = null;
+      if (report.endDate)
+        endDate = new Date(report.endDate);
+
+      let r = new Report(report._id, new Date(report.startDate), endDate, report.player, skills, games, report.rating)
+      if (report.userId)
+        r.user = report.userId.fullname;
+
+      this.myReports.push(r);
+    }
+    console.log(this.myReports);
+    return this.myReports;
   }
 
 }

@@ -9,4 +9,15 @@ page-player {
             width: 15em;
         }
     }
+
+    .changing-avatar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 5px;
+        padding-right: 5px;
+        h5 {
+            color: color($colors, primary, base);
+        }
+    }
 }

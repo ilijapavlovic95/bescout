@@ -1,3 +1,10 @@
+import { Calendar } from '@ionic-native/calendar';
+import { CalendarService } from './../services/calendar';
+import { HomePageModule } from './../pages/home/home.module';
+import { GameReminderPageModule } from './../pages/game-reminder/game-reminder.module';
+import { GameReminderPage } from './../pages/game-reminder/game-reminder';
+import { SigninPageModule } from './../pages/signin/signin.module';
+import { AuthService } from './../services/auth';
 import { ComponentsModule } from './../components/components.module';
 import { PlayerSearchPageModule } from './../pages/player-search/player-search.module';
 import { PlayersService } from './../services/players';
@@ -28,6 +35,9 @@ import { GamePage } from '../pages/game/game';
 import { PlayerPage } from '../pages/player/player';
 import { MyReportService } from '../services/my-report';
 import { PlayerSearchPage } from '../pages/player-search/player-search';
+import { SigninPage } from '../pages/signin/signin';
+import { HomePage } from '../pages/home/home';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [
@@ -45,8 +55,12 @@ import { PlayerSearchPage } from '../pages/player-search/player-search';
     EditGamePageModule,
     PlayerPageModule,
     PlayerSearchPageModule,
+    SigninPageModule,
     ComponentsModule,
-    IonicModule.forRoot(MyApp)
+    GameReminderPageModule,
+    HomePageModule,
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -59,7 +73,10 @@ import { PlayerSearchPage } from '../pages/player-search/player-search';
     GamePage,
     EditGamePage,
     PlayerPage,
-    PlayerSearchPage
+    PlayerSearchPage,
+    GameReminderPage,
+    SigninPage,
+    HomePage
   ],
   providers: [
     StatusBar,
@@ -67,6 +84,9 @@ import { PlayerSearchPage } from '../pages/player-search/player-search';
     ReportsService,
     PlayersService,
     MyReportService,
+    AuthService,
+    Calendar,
+    CalendarService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

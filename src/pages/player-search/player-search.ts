@@ -21,6 +21,7 @@ export class PlayerSearchPage implements OnInit, OnDestroy{
   subscription: Subscription;
 
   players: Player[];
+  playersForView: Player[];
   selectedPlayer: Player;
 
   constructor(
@@ -39,27 +40,50 @@ export class PlayerSearchPage implements OnInit, OnDestroy{
   }
 
   initializePlayers() {
+    this.playersForView = [];
     this.players = [];
     this.subscription = this.playersService.fetchPlayers().subscribe(
       data => {
         const players: any[] = data.players;
         for (const player of players) {
           this.players.push(new Player(player._id, player.name, player.position, player.club, player.country, player.age,player.imgName));
+          this.playersForView.push(new Player(player._id, player.name, player.position, player.club, player.country, player.age,player.imgName));
         }
+        this.playersForView = this.playersForView.sort((a, b) => {
+          if (a.name > b.name)
+            return 1;
+          return -1;
+        });
       },
       err => console.log(err)
     );
   }
 
+  resetPlayersForView() {
+    this.playersForView = [];
+    for (const pl of this.players) {
+      this.playersForView.push(pl);
+    }
+  }
+
   filterPlayers(event){
     console.log(event);
-    this.initializePlayers();
+    this.resetPlayersForView();
 
     const val = event.target.value;
+    console.log(val);
 
     if (val && val.trim() != '') {
-      this.players = this.players.filter((player: Player) => {
+      console.log('in if: ', val);
+      
+      this.playersForView = this.playersForView.filter((player: Player) => {
         return (player.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      });
+
+      this.playersForView = this.playersForView.sort((a, b) => {
+        if (a.name > b.name)
+          return 1;
+        return -1;
       });
     }
   }

@@ -98,6 +98,10 @@ $card-ios-margin-right: 0;
 $card-md-margin-left: 0;
 $card-md-margin-right: 0;
 
+ion-content {
+  background: color($colors, light, base) !important;
+}
+
 
 // App Windows Variables
 // --------------------------------------------------

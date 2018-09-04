@@ -30,4 +30,16 @@ page-report {
         margin-bottom: 3px;
         margin-top: 3px;
     }
+
+    .game-choice {
+        ion-col {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+        }
+        .opponent {
+            color: color($colors, primary, base);
+            font-weight: 700;
+        }
+    }
 }

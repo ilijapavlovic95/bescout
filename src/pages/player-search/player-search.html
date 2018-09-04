@@ -20,15 +20,16 @@
 
 <ion-content padding>
   <ion-searchbar (ionInput)="filterPlayers($event)"></ion-searchbar>
-  <ion-card *ngIf="players.length > 0">
-    <ion-list>
-      <ion-item *ngFor="let player of players" (click)="selectPlayer(player)">
+  <div *ngIf="playersForView.length > 0">
+    <player-details *ngFor="let player of playersForView" [player]="player" (playerSelected)="selectPlayer(player)"></player-details>
+    <!-- <ion-list>
+      <ion-item *ngFor="let player of playersForView" (click)="selectPlayer(player)">
         {{ player.name }}
       </ion-item>
-    </ion-list>
-  </ion-card>
+    </ion-list> -->
+  </div>
 
-  <ion-card *ngIf="players.length === 0" padding>
+  <ion-card *ngIf="playersForView.length === 0" padding>
     0 results
     <button ion-button block outline color="primary" (click)="goBack()" margin-top>GO BACK</button>
   </ion-card>

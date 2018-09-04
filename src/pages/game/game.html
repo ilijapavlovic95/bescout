@@ -60,11 +60,14 @@
       <ion-item>
         <ion-label>Select Stat</ion-label>
         <ion-select [(ngModel)]="selectedStat" interface="popover" (ionChange)="createPieChart()">
-          <ion-option [value]="statOption" *ngFor="let statOption of generateSpecificStats()">{{statOption.title}}</ion-option>
+          <ion-option [value]="statOption" *ngFor="let statOption of generateSpecificStats()">{{statOption.title | uppercase}}</ion-option>
         </ion-select>
       </ion-item>
-      <ion-item>
-        <p style="width: 100%; text-align: center; font-size: 1em">{{selectedStat?.title}}</p>
+      <div *ngIf="noDataMessageVisible" style="width: 100%; text-align: center">
+        <p>There is not enough data for selected variable to present.</p>
+      </div>
+      <ion-item *ngIf="!noDataMessageVisible">
+        <p style="width: 100%; text-align: center; font-size: 1em">{{selectedStat?.title | uppercase}}</p>
         <canvas #pieCanvas></canvas>
       </ion-item>
     </ion-item-group>

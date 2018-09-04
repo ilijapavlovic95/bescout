@@ -1,3 +1,4 @@
+import { AuthService } from './auth';
 import { Game } from './../models/game';
 import { Api } from './../constants/api';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
@@ -9,7 +10,7 @@ export class MyReportService {
 
     private report: Report = new Report('',null,null,null,[],[],0);
 
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient, private auth: AuthService){}
 
     getReport(){
         return this.report;
@@ -22,7 +23,8 @@ export class MyReportService {
     saveReport(report: Report) {
         const httpOptions = {
             headers: new HttpHeaders({
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-auth-token': this.auth.getCurrentUser().getToken()
             })
         };
 
@@ -37,13 +39,15 @@ export class MyReportService {
     updateReport(report: Report) {
         const httpOptions = {
             headers: new HttpHeaders({
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-auth-token': this.auth.getCurrentUser().getToken()
             })
         };
 
         const data = {
             playerId: report.player._id,
-            skills: report.skills
+            skills: report.skills,
+            endDate: report.endDate
         }
 
         return this.http.put(Api.URI + 'reports/' + report._id, data, httpOptions);
@@ -68,7 +72,8 @@ export class MyReportService {
     saveGame(report: Report, game: Game) {
         const httpOptions = {
             headers: new HttpHeaders({
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-auth-token': this.auth.getCurrentUser().getToken()
             })
         };
 

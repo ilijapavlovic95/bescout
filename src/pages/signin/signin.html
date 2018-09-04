@@ -1,0 +1,78 @@
+<!--
+  Generated template for the SigninPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>BeScout</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <div id="signin-content" padding>
+    <div [formGroup]="signinForm" *ngIf="mode === 'signin'">
+
+      <ion-list>
+        <ion-item>
+          <ion-input type="email" formControlName="email" placeholder="Email"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-item>
+          <ion-input type="password" formControlName="password" placeholder="Password"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <p class="validation">{{validationText}}</p>
+
+      <button ion-button outline block color="primary" (click)="onSignin()">Signin</button>
+
+      <p>You don't have an account? Register
+        <span style="text-decoration: underline" (click)="mode = 'signup'">here</span>
+      </p>
+
+    </div>
+
+    <div [formGroup]="signupForm" *ngIf="mode === 'signup'">
+
+      <ion-list>
+        <ion-item>
+          <ion-input type="email" formControlName="email"  placeholder="Email"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-item>
+          <ion-input type="password" formControlName="password"  placeholder="Password"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-item>
+          <ion-input type="text" formControlName="username" placeholder="Username"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-item>
+          <ion-input type="text" formControlName="fullname" placeholder="Fullname"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <p class="validation">{{validationText}}</p>
+
+      <button ion-button outline block color="primary" (click)="onSignup()">Signup</button>
+
+      <p>You already have an account? Signin
+          <span style="text-decoration: underline" (click)="mode = 'signin'">here</span>
+        </p>
+
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,39 @@
+player-details {
+    .player-card {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: auto;
+        background: color($colors, secondary, base);
+
+        ion-col {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        img {
+            height: auto;
+            width: 100%;
+            margin-left: 1em;
+        }
+        .player-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100%;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            h4 {
+                color: color($colors, primary, base);
+                font-weight: 700;
+            }
+            .details {
+                color: color($colors, primary, base);
+                width: 100%;
+                text-align: center;
+            }
+        }
+    }
+}

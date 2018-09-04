@@ -1,0 +1,16 @@
+<ion-card class="player-card" no-padding (click)="playerSelected.emit()">
+  <ion-grid>
+    <ion-row>
+      <ion-col col-2>
+        <img [src]="'assets/imgs/player/' + player.imgName + '.png'" />
+      </ion-col>
+      <ion-col col-10 no-padding>
+        <div class="player-info">
+          <div class="details" style="font-weight: 700; margin-bottom: 6px">{{player.name}}</div>
+          <div class="details">{{player.age}} years old, from {{player.country}}</div>
+          <div class="details">{{player.position}} at {{player.club}}</div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-card>

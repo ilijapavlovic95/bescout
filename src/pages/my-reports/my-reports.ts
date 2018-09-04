@@ -1,3 +1,5 @@
+import { SigninPage } from './../signin/signin';
+import { AuthService } from './../../services/auth';
 import { ReportPage } from './../report/report';
 import { Game } from './../../models/game';
 import { Report } from './../../models/report';
@@ -5,8 +7,7 @@ import { ReportsService } from './../../services/reports';
 import { Subscription } from 'rxjs/Subscription';
 import { EditReportPage } from './../edit-report/edit-report';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { IonicPage, NavController, NavParams, LoadingController, App } from 'ionic-angular';
 /**
  * Generated class for the MyReportsPage page.
  *
@@ -29,7 +30,10 @@ export class MyReportsPage implements OnInit, OnDestroy {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private reportsService: ReportsService) {
+    private reportsService: ReportsService,
+    private authService: AuthService,
+    private loadingCtrl: LoadingController,
+    private app: App) {
   }
 
   ngOnInit(): void {
@@ -42,36 +46,30 @@ export class MyReportsPage implements OnInit, OnDestroy {
   }
 
   initializeReports(data: any) {
-    console.log(data.reports);
-    this.myReports = [];
-    const dbReports = data.reports;
-    for (const report of dbReports) {
-      let skills = [];
-      for (const dbSkill of report.skills) {
-        let skill = { title: dbSkill.skill, value: dbSkill.value };
-        this.reportsService.generateStarsArray(skill);
-        skills.push(skill);
-      }
-
-      let games: Game[] = [];
-      for (const dbGame of report.games) {
-        let min = 90;
-        if (dbGame.minutes)
-          min = dbGame.minutes;
-        const game = new Game(dbGame._id, dbGame.opponent, dbGame.competition, new Date(dbGame.date), dbGame.rating, min, dbGame.effect);
-        games.push(game);
-      }
-
-      let endDate = null;
-      if (report.endDate)
-        endDate = new Date(report.endDate);
-      this.myReports.push(new Report(report._id, new Date(report.startDate), endDate, report.player, skills, games, report.rating));
-    }
-    console.log(this.myReports);
+    this.myReports = this.reportsService.initializeReports(data);
+    this.myReports = this.myReports.sort((a,b) => {
+      if (a.startDate < b.startDate)
+        return 1;
+      return -1;
+    });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MyReportsPage');
+  }
+
+  ionViewWillEnter() {
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait ...'
+    });
+    loading.present();
+    this.subscription = this.reportsService.getMyReports().subscribe(
+      data => {
+        loading.dismiss();
+        this.initializeReports(data);
+      },
+      err => console.log(err)
+    );
   }
 
   showReport(report, mode: string) {
@@ -79,6 +77,17 @@ export class MyReportsPage implements OnInit, OnDestroy {
       this.navCtrl.push(ReportPage, { report: report });
     else
       this.navCtrl.push(EditReportPage, { report: report, mode: 'Edit' });
+  }
+
+  // TODO dodati ovo na svaku stranicu gde ima signout
+  signout() {
+    console.log('signoout');
+    this.authService.signout()
+      .then((value) => {
+        const nav = this.app.getRootNav();
+        nav.setRoot(SigninPage);
+      })
+      .catch((err) => console.log(err));
   }
 
   ngOnDestroy(): void {

@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-buttons left>
       <button ion-button clear (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -23,6 +23,11 @@
 
     <div class="img-div">
       <img [src]="'assets/imgs/player/' + imgName + '.png'" />
+    </div>
+    <div class="changing-avatar">
+      <button ion-button outline color="primary" small (click)="previousAvatar()">BACK</button>
+      <h5>CHANGE AVATAR</h5>
+      <button ion-button outline color="primary" small (click)="nextAvatar()">NEXT</button>
     </div>
 
     <ion-card-content>
