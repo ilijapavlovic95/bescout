@@ -1,0 +1,29 @@
+community-report {
+    .report-div {
+        padding-right: 0;
+        padding-left: 0;
+    }
+    ion-row {
+        margin-right: 5px;
+        margin-left: 5px;
+        ion-col {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img {
+                width: 2em;
+                height: 2em;
+            }
+        }
+    }
+    .ratings {
+        border-top: 1px solid gray;
+    }
+
+    .spec-stat-btn {
+        border: none;
+        background: none;
+    }
+
+    
+}

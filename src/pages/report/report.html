@@ -112,4 +112,49 @@
     <p padding-left padding-right>No game has been added to this report so there is not any stats.</p>
   </div>
 
+  <ion-row class="ratings" margin-bottom *ngIf="report.user">
+      <ion-col col class="like">
+        <button ion-button clear>
+          <small>{{report.likes.length}} {{report.likes.length == 1 ? 'like' : 'likes'}}</small>
+        </button>
+        <button class="spec-stat-btn" style="opacity: 0.5" (click)="likeReport('add')" *ngIf="!alreadyLiked()">
+          <div class="thumb">
+            <!-- <ion-badge color="secondary" class="positive-badge">67</ion-badge> -->
+            <i class="material-icons md-primary md-36">
+              &#xe8dc;
+            </i>
+          </div>
+        </button>
+        <button class="spec-stat-btn" (click)="likeReport('remove')" *ngIf="alreadyLiked()">
+          <div class="thumb">
+            <!-- <ion-badge color="secondary" class="positive-badge">67</ion-badge> -->
+            <i class="material-icons md-primary md-36">
+              &#xe8dc;
+            </i>
+          </div>
+        </button>
+      </ion-col>
+      <ion-col col class="dislike">
+        <button class="spec-stat-btn" style="opacity: 0.5" (click)="dislikeReport('add')" *ngIf="!alreadyDisliked()">
+          <!-- <ion-badge color="primary" class="negative-badge">15</ion-badge> -->
+          <div class="thumb">
+            <i class="material-icons md-danger md-36">
+              &#xe8db;
+            </i>
+          </div>
+        </button>
+        <button class="spec-stat-btn" (click)="dislikeReport('remove')" *ngIf="alreadyDisliked()">
+          <!-- <ion-badge color="primary" class="negative-badge">15</ion-badge> -->
+          <div class="thumb">
+            <i class="material-icons md-danger md-36">
+              &#xe8db;
+            </i>
+          </div>
+        </button>
+        <button ion-button color="danger" clear>
+          <small>{{report.dislikes.length}} {{report.dislikes.length == 1 ? 'dislike' : 'dislikes'}}</small>
+        </button>
+      </ion-col>
+    </ion-row>
+
 </ion-content>

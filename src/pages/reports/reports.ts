@@ -82,7 +82,7 @@ export class ReportsPage implements OnInit, OnDestroy{
         this.filterVisible = false;
         this.reports = this.reportsService.initializeReports(data);
         this.reports = this.reports.sort((a,b) => {
-          return b.games.length - a.games.length;
+          return (b.likes.length - b.dislikes.length) - (a.likes.length - a.dislikes.length);
         });
         if (this.reports.length === 0)
           this.noReportsMessageVisible = true;

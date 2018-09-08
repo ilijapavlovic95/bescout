@@ -31,6 +31,7 @@ export class CallBroker {
   private addReportRoute = this.reports;
   private updateReportRoute = this.reports;
   private addGameToReportRoute = this.reports + '/games';
+  private rateReportRoute = this.reports + '/ratings';
 
   private getSkillsByPosition = this.skills;
 
@@ -40,7 +41,7 @@ export class CallBroker {
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'x-auth-token': this.userService.getCurrentUser().getToken()
+        'x-auth-token': this.userService.getCurrentUser().token
       })
     };
   }
@@ -124,6 +125,10 @@ export class CallBroker {
 
   getCommunityReports(queryParams: string) {
     return this.http.get(this.generateRoute(this.getReportsRoute, null, queryParams));
+  }
+
+  rateReport(data: any, reportId: string) {
+    return this.http.put(this.generateRoute(this.rateReportRoute, reportId), data, this.httpAuthOptions());
   }
 
 }

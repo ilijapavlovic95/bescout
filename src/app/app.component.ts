@@ -22,6 +22,7 @@ export class MyApp {
         .then((currentUser) => {
           if (currentUser) {
             this.authService.setCurrentUser(currentUser);
+            console.log('on app start:', this.authService.getCurrentUser());
             this.rootPage = TabsPage;
           } else {
             this.rootPage = SigninPage

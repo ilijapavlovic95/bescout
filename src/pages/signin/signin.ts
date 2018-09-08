@@ -71,8 +71,11 @@ export class SigninPage implements OnInit, OnDestroy {
           const user = response.body.user;
           const currentUser: User = new User(user.username, user.email, user.fullname, user.role);
           currentUser._id = user._id;
+          console.log(response);
+          console.log(response.headers);
           const token = response.headers.get('x-auth-token');
           currentUser.setToken(token);
+          console.log(currentUser);
           this.authService.saveCurrentUserToStorage(currentUser)
             .then((value) => {
               loading.dismiss();

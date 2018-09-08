@@ -10,7 +10,7 @@ export class MyReportService {
 
     constructor(private callBroker: CallBroker) {}
 
-    private report: Report = new Report('',null,null,null,[],[],0);
+    private report: Report = new Report('',null,null,null,[],[],[],[]);
 
     getReport(){
         return this.report;

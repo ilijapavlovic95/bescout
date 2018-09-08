@@ -15,5 +15,7 @@ export class Report {
             value: number
         }>,
         public games: Array<Game>,
-        public rating: number) { }
+        public likes: string[],
+        public dislikes: string[]
+    ) { }
 }

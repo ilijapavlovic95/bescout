@@ -73,7 +73,7 @@ export class EditReportPage implements OnInit, OnDestroy {
     if (this.mode === 'Edit')
       this.report = this.navParams.data.report;
     else
-      this.report = new Report(null, null, null, null, [], [], 0);
+      this.report = new Report(null, null, null, null, [], [], [], []);
 
     this.myreportService.setReport(this.report);
   }

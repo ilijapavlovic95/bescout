@@ -1,8 +1,9 @@
+import { Subscription } from 'rxjs/Subscription';
 import { SigninPage } from './../signin/signin';
 import { AuthService } from './../../services/auth';
 import { GamePage } from './../game/game';
 import { Report } from './../../models/report';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, App } from 'ionic-angular';
 import { ReportsService } from '../../services/reports';
 import { Chart } from 'chart.js';
@@ -19,7 +20,10 @@ import { Chart } from 'chart.js';
   selector: 'page-report',
   templateUrl: 'report.html',
 })
-export class ReportPage implements OnInit {
+export class ReportPage implements OnInit, OnDestroy {
+
+  subscriptionLike: Subscription;
+  subscriptionDislike: Subscription;
 
   selectedStat: any;
   noGames: boolean;
@@ -179,14 +183,51 @@ export class ReportPage implements OnInit {
     modal.present();
   }
 
-  // signout() {
-  //   console.log('signoout');
-  //   this.authService.signout()
-  //     .then((value) => {
-  //       const nav = this.app.getRootNav();
-  //       nav.setRoot(SigninPage);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }
+  alreadyLiked() {
+    for (const userId of this.report.likes) {
+      if (userId === this.authService.getCurrentUser()._id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  alreadyDisliked() {
+    for (const userId of this.report.dislikes) {
+      if (userId === this.authService.getCurrentUser()._id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  likeReport(mode: string) {
+    this.subscriptionLike = this.reportsService.rateReport('like', mode, this.report).subscribe(
+        (data: any) => {
+          this.report.likes = data.report.likes;
+          this.report.dislikes = data.report.dislikes;
+        },
+        (err) => console.log(err)
+      );
+  }
+
+  dislikeReport(mode: string) {
+    this.subscriptionLike = this.reportsService.rateReport('dislike', mode, this.report).subscribe(
+        (data: any) => {
+          this.report.dislikes = data.report.dislikes;
+          this.report.likes = data.report.likes;
+        },
+        (err) => console.log(err)
+      );
+  }
+
+  ngOnDestroy() {
+    if (this.subscriptionDislike) {
+      this.subscriptionDislike.unsubscribe();
+    }
+    if (this.subscriptionLike) {
+      this.subscriptionLike.unsubscribe();
+    }
+  }
 
 }

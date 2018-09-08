@@ -240,7 +240,16 @@ export class ReportsService {
       if (report.endDate)
         endDate = new Date(report.endDate);
 
-      let r = new Report(report._id, new Date(report.startDate), endDate, report.player, skills, games, report.rating)
+      let likes = []
+      if (report.likes)
+        likes = report.likes;
+
+      let dislikes = []
+      if (report.dislikes)
+        dislikes = report.dislikes;
+
+      let r = new Report(report._id, new Date(report.startDate), endDate, report.player, skills, games, likes, dislikes);
+
       if (report.userId)
         r.user = report.userId.fullname;
 
@@ -248,6 +257,10 @@ export class ReportsService {
     }
     console.log(this.myReports);
     return this.myReports;
+  }
+
+  rateReport(rateType: string, mode: string, report: Report) {
+    return this.callBroker.rateReport({ type: rateType, mode: mode }, report._id);
   }
 
 }

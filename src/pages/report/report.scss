@@ -42,4 +42,14 @@ page-report {
             font-weight: 700;
         }
     }
+
+    .col {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .spec-stat-btn {
+        border: none;
+        background: none;
+    }
 }

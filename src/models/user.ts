@@ -1,12 +1,12 @@
 export class User {
     public password: string;
-    private token: string;
+    public token: string;
     public _id: string;
 
-    getToken() {
+    public getToken() {
         return this.token;
     }
-    setToken(token) {
+    public setToken(token) {
         this.token = token;
     }
     

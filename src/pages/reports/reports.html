@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>Community Reports</ion-title>
+    <ion-title>Community</ion-title>
     <ion-buttons end>
       <button ion-button icon-end clear color="secondary" (click)="signout()">
         Sign Out
@@ -87,7 +87,7 @@
   <p padding *ngIf="noReportsMessageVisible" text-center>There is no report which fulfill defined conditions.</p>
 
   <ion-list>
-    <report-details *ngFor="let report of reports" [report]="report" (viewClicked)="showReport(report, 'view')"></report-details>
+    <community-report *ngFor="let report of reports" [report]="report" (viewClicked)="showReport(report, 'view')"></community-report>
   </ion-list>
 
 </ion-content>
