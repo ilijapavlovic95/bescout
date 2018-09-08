@@ -1,4 +1,5 @@
-import { Api } from './../constants/api';
+import { UserService } from './userService';
+import { CallBroker } from './callBroker';
 import { User } from './../models/user';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -7,81 +8,47 @@ import { Storage } from '@ionic/storage';
 @Injectable()
 export class AuthService {
 
-  currentUser: User;
+  constructor(private userService: UserService, private callBroker: CallBroker) { }
 
-  constructor(private storage: Storage, private http: HttpClient) { }
-
-  setCurrentUser(data: any) {
-    const user = data.user;
-    this.currentUser = new User(user.username, user.email, user.fullname, user.role);
-    this.currentUser._id = user._id;
-    this.currentUser.setToken(data.token);
+  setCurrentUser(currentUser: User) {
+    this.userService.setCurrentUser(currentUser);
   }
 
   getCurrentUser() {
-    return this.currentUser;
+    return this.userService.getCurrentUser();
   }
 
   fetchCurrentUser(token) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'x-auth-token': token
-      })
-    };
-    return this.http.post(Api.URI + 'users/me', null, httpOptions);
-  }
-
-  async isAuthorized() {
-    try {
-      const token = await this.storage.get('token');
-
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
+    return this.callBroker.fetchCurrentUser();
   }
 
   signup(user: User) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
     const data = user;
 
-    return this.http.post(Api.URI + 'users', data, httpOptions);
+    return this.callBroker.signup(data);
   }
 
   signin(email, password) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
     const data = {
       email: email,
       password: password
     };
 
-    return this.http.post(Api.URI + 'auth', data, httpOptions);
+    return this.callBroker.signin(data);
   }
 
-  saveTokenToStorage(token) {
-    return this.storage.set('token', token);
+  saveCurrentUserToStorage(user) {
+    return this.userService.saveCurrentUserToStorage(user);
   }
 
   // vraca Promise
-  getTokenFromStorage() {
-    return this.storage.get('token');
+  getCurrentUserFromStorage() {
+    return this.userService.getCurrentUserFromStorage();
 
   }
 
   signout() {
-    return this.storage.clear();
+    return this.userService.signout();
   }
 
 }

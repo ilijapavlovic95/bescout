@@ -1,3 +1,5 @@
+import { UserService } from './../services/userService';
+import { CallBroker } from './../services/callBroker';
 import { Calendar } from '@ionic-native/calendar';
 import { CalendarService } from './../services/calendar';
 import { HomePageModule } from './../pages/home/home.module';
@@ -87,6 +89,8 @@ import { IonicStorageModule } from '@ionic/storage';
     AuthService,
     Calendar,
     CalendarService,
+    CallBroker,
+    UserService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -1,6 +1,6 @@
+import { CallBroker } from './callBroker';
 import { AuthService } from './auth';
 import { Game } from './../models/game';
-import { Api } from './../constants/api';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Report } from './../models/report';
 import { Injectable } from '@angular/core';
@@ -8,9 +8,9 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class MyReportService {
 
-    private report: Report = new Report('',null,null,null,[],[],0);
+    constructor(private callBroker: CallBroker) {}
 
-    constructor(private http: HttpClient, private auth: AuthService){}
+    private report: Report = new Report('',null,null,null,[],[],0);
 
     getReport(){
         return this.report;
@@ -21,65 +21,32 @@ export class MyReportService {
     }
 
     saveReport(report: Report) {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'x-auth-token': this.auth.getCurrentUser().getToken()
-            })
-        };
-
         const data = {
             playerId: report.player._id,
             skills: report.skills
         }
 
-        return this.http.post(Api.URI + 'reports', data, httpOptions);
+        return this.callBroker.saveReport(data);
     }
 
     updateReport(report: Report) {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'x-auth-token': this.auth.getCurrentUser().getToken()
-            })
-        };
-
         const data = {
             playerId: report.player._id,
             skills: report.skills,
             endDate: report.endDate
         }
 
-        return this.http.put(Api.URI + 'reports/' + report._id, data, httpOptions);
+        return this.callBroker.updateReport(data, report._id);
     }
 
     getStats(position: string): any {
-        return this.http.get(Api.URI + 'stats/' + position);
+        return this.callBroker.getStats(position);
     }
 
-    // saveGame(report: Report) {
-    //     const httpOptions = {
-    //         headers: new HttpHeaders({
-    //             'Content-Type': 'application/json'
-    //         })
-    //     };
-
-    //     const data = report;
-
-    //     return this.http.put(Api.URI + 'reports/games/' + report._id, data, httpOptions);
-    // }
-
     saveGame(report: Report, game: Game) {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'x-auth-token': this.auth.getCurrentUser().getToken()
-            })
-        };
-
         const data = game;
 
-        return this.http.put(Api.URI + 'reports/games/' + report._id, data, httpOptions);
+        return this.callBroker.saveGame(data, report._id);
     }
 
 }

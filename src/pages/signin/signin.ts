@@ -67,11 +67,16 @@ export class SigninPage implements OnInit, OnDestroy {
 
     this.subscriptionSignin = this.authService.signin(this.signinForm.value.email, this.signinForm.value.password)
       .subscribe(
-        (data: any) => {
-          this.authService.saveTokenToStorage(data.token)
+        (response: any) => {
+          const user = response.body.user;
+          const currentUser: User = new User(user.username, user.email, user.fullname, user.role);
+          currentUser._id = user._id;
+          const token = response.headers.get('x-auth-token');
+          currentUser.setToken(token);
+          this.authService.saveCurrentUserToStorage(currentUser)
             .then((value) => {
               loading.dismiss();
-              this.authService.setCurrentUser(data);
+              this.authService.setCurrentUser(currentUser);
               this.navCtrl.setRoot(TabsPage);
             })
             .catch((err) => console.log(err));
@@ -101,11 +106,17 @@ export class SigninPage implements OnInit, OnDestroy {
     });
     loading.present();
     this.subscriptionSignup = this.authService.signup(user).subscribe(
-      (data: any) => {
-        this.authService.saveTokenToStorage(data.token)
+      (response: any) => {
+        const data = response.body;
+        const user = data.user;
+        const currentUser: User = new User(user.username, user.email, user.fullname, user.role);
+        currentUser._id = user._id;
+        const token = response.headers.get('x-auth-token');
+        currentUser.setToken(token);
+        this.authService.saveCurrentUserToStorage(currentUser)
           .then((value) => {
             loading.dismiss();
-            this.authService.setCurrentUser(data);
+            this.authService.setCurrentUser(currentUser);
             this.navCtrl.setRoot(TabsPage);
           })
           .catch((err) => console.log(err));

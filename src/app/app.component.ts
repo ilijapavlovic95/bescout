@@ -15,22 +15,27 @@ export class MyApp {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
+      statusBar.styleDefault();
+      splashScreen.hide();
 
-      console.log(this.authService.getTokenFromStorage());
-      this.authService.getTokenFromStorage()
-        .then((token) => {
-          this.authService.fetchCurrentUser(token).subscribe(
-            (data: any) => {
-              data.token = token;
-              this.authService.setCurrentUser(data);
-              this.rootPage = TabsPage;
-            },
-          );
+      this.authService.getCurrentUserFromStorage()
+        .then((currentUser) => {
+          if (currentUser) {
+            this.authService.setCurrentUser(currentUser);
+            this.rootPage = TabsPage;
+          } else {
+            this.rootPage = SigninPage
+          }
+          // this.authService.fetchCurrentUser(token).subscribe(
+          //   (data: any) => {
+          //     data.token = token;
+          //     this.authService.setCurrentUser(data);
+          //     this.rootPage = TabsPage;
+          //   },
+          // );
         })
         .catch((err) => this.rootPage = SigninPage);
       
-      statusBar.styleDefault();
-      splashScreen.hide();
 
       
     });

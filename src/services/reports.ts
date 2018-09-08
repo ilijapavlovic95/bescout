@@ -1,6 +1,6 @@
+import { CallBroker } from './callBroker';
 import { AuthService } from './auth';
 import { Game } from './../models/game';
-import { Api } from './../constants/api';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Report } from '../models/report';
@@ -24,14 +24,14 @@ export class ReportsService {
 
   private myReports: Report[] = [];
 
-  constructor(private http: HttpClient, private auth: AuthService) { }
+  constructor(private callBroker: CallBroker) { }
 
   setMyReports(reports: Report[]): void {
     this.myReports = reports;
   }
 
   getMyReports(): any {
-    return this.http.get(Api.URI + 'reports/' + this.auth.getCurrentUser()._id);
+    return this.callBroker.getMyReports();
   }
 
   addMyReport(report) {
@@ -58,7 +58,7 @@ export class ReportsService {
       else query += `&minGames=${filter.minGames}`;
     }
 
-    return this.http.get(Api.URI + 'reports' + query);
+    return this.callBroker.getCommunityReports(query);
   }
 
   generateStarsArray(skill) {

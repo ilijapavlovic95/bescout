@@ -1,9 +1,9 @@
+import { CallBroker } from './callBroker';
 import { AuthService } from './auth';
 import { Skill } from './../models/skill';
 import { Injectable } from '@angular/core';
 import { Player } from '../models/player';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Api } from '../constants/api';
 
 @Injectable()
 export class PlayersService {
@@ -11,20 +11,14 @@ export class PlayersService {
     private players: Player[] = [];
 
     constructor(
-        private http: HttpClient, private auth: AuthService
+        private callBroker: CallBroker
     ) { }
 
     fetchPlayers(): any {
-        return this.http.get(Api.URI + 'players');
+        return this.callBroker.fetchPlayers();
     }
 
     savePlayer(player: Player): any {
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'x-auth-token': this.auth.getCurrentUser().getToken()
-            })
-        };
 
         const data = {
             name: player.name,
@@ -35,7 +29,7 @@ export class PlayersService {
             imgName: player.imgName
         }
 
-        return this.http.post(Api.URI + 'players', data, httpOptions);
+        return this.callBroker.savePlayer(data);
     }
 
     setPlayers(players: Player[]): void {
@@ -47,7 +41,7 @@ export class PlayersService {
     }
 
     getSkills(position: string): any {
-        return this.http.get(Api.URI + 'skills/' + position);
+        return this.callBroker.getSkills(position);
     }
 
 }
