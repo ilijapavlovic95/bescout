@@ -42,12 +42,14 @@ $font-path: "../assets/fonts";
 .material-icons.md-48 { font-size: 48px; }
 
 /* Rules for using icons as black on a light background. */
-.material-icons.md-primary { color: #176957; }
-.material-icons.md-primary.md-inactive { color: #176957ad; }
+.material-icons.md-primary { color: #2c2f38; }
+.material-icons.md-primary.md-inactive { color: #2c2f38ad; }
 .material-icons.md-secondary { color: #fdcb6e; }
 .material-icons.md-secondary.md-inactive { color: #fdcb6eb2; }
 .material-icons.md-danger { color: #f53d3d; }
 .material-icons.md-danger.md-inactive { color: #f53d3dad; }
+.material-icons.md-success { color: #176957; }
+.material-icons.md-danger.md-success { color: #176957ad; }
 
 // The app direction is used to include
 // rtl styles in your app. For more info, please see:
@@ -77,7 +79,8 @@ $app-direction: ltr;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #176957,
+  // primary:    #176957,
+  primary:    #2c2f38,
   secondary:  #fdcb6e,
   danger:     #f53d3d,
   light:      #f4f4f4,

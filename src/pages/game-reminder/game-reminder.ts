@@ -4,6 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, AlertController, ToastController, Events, Platform } from 'ionic-angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Report } from '../../models/report';
+import * as moment from 'moment';
 
 /**
  * Generated class for the GameReminderPage page.
@@ -38,7 +39,8 @@ export class GameReminderPage implements OnInit, OnDestroy {
     this.gameForm = new FormGroup({
       opponent: new FormControl(null, Validators.required),
       competition: new FormControl(null, Validators.required),
-      date: new FormControl(null, Validators.required)
+      date: new FormControl(null, Validators.required),
+      time: new FormControl(null, Validators.required)
     });
   }
 
@@ -73,19 +75,31 @@ export class GameReminderPage implements OnInit, OnDestroy {
       gameInfo.player = this.report.player.name;
       gameInfo.opponent = values.opponent;
       gameInfo.competition = values.competition;
-      gameInfo.date = values.date;
+      gameInfo.date = moment(values.date + ' ' + values.time, 'DD.MM.YYYY. HH:mm');
+      console.log(gameInfo);
       this.addEvent(gameInfo);
 
     }
   }
 
   addEvent(gameInfo: any) {
-    const title = 'Report reminder: ' + gameInfo.player;
-    const notes = 'vs' + gameInfo.opponent + ', ' + gameInfo.competition;
-    const startDate: Date = gameInfo.date;
-    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate(),
+    console.log(gameInfo);
+    debugger;
+    const title = 'Game reminder: ' + gameInfo.player;
+    const notes = 'vs ' + gameInfo.opponent + ', ' + gameInfo.competition;
+    const startDate: Date = gameInfo.date.toDate();
+    const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(),
       startDate.getHours() + 2, startDate.getMinutes(), startDate.getSeconds());
-    this.calendar.createEvent(title, null, notes, startDate, endDate)
+    console.log('startDate', startDate);
+    console.log('endDate', endDate);
+    // this.calendar.createEvent('Moj Komšija događaj', this.event.locationName, '', new Date(this.event.dateFrom), new Date(this.event.dateTo)).then(
+    //   () => {
+    //     this.toast.presentToast('Događaj je uspešno sačuvan u kalendaru telefona.')
+    //   }, () => {
+    //     this.createCalendarAlert('Greška', 'Došlo je do greške prilikom čuvanja događaja. Proverite da li aplikacija ima dozvoljen pristup kalendaru i pokušajte ponovo.');
+    //   });
+
+    this.calendar.createEvent(title, '', notes, startDate, endDate)
       .then(
         () => {
           console.log('event created');

@@ -45,7 +45,7 @@
         </button>
       </ion-col>
       <ion-col col></ion-col>
-      <ion-col col>
+      <ion-col col-6>
         <button ion-button outline clear color="primary">
           <small text-center>SCOUT:
             <b>{{report.user}}</b>
@@ -63,7 +63,7 @@
         <button class="spec-stat-btn" style="opacity: 0.5" (click)="likeReport('add')" *ngIf="!alreadyLiked()">
           <div class="thumb">
             <!-- <ion-badge color="secondary" class="positive-badge">67</ion-badge> -->
-            <i class="material-icons md-primary md-24">
+            <i class="material-icons md-success md-24">
               &#xe8dc;
             </i>
           </div>
@@ -71,7 +71,7 @@
         <button class="spec-stat-btn" (click)="likeReport('remove')" *ngIf="alreadyLiked()">
           <div class="thumb">
             <!-- <ion-badge color="secondary" class="positive-badge">67</ion-badge> -->
-            <i class="material-icons md-primary md-24">
+            <i class="material-icons md-success md-24">
               &#xe8dc;
             </i>
           </div>

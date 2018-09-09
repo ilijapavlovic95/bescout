@@ -57,10 +57,19 @@
         <ion-item>
           <ion-label style="display: flex; align-items: center; justify-content: space-between">
             Pick Date
-            <i class="material-icons md-primary"> date_range</i>
+            <i class="material-icons md-primary"> &#xe916;</i>
           </ion-label>
-          <ion-datetime displayFormat="D.MM.YYYY. HH:mm" pickerFormat="D.MM.YYYY. HH:mm" [max]="generateMaxDate()" [min]="generateMinDate()"
+          <ion-datetime displayFormat="DD.MM.YYYY." pickerFormat="DD.MM.YYYY." [max]="generateMaxDate()" [min]="generateMinDate()"
             formControlName="date"></ion-datetime>
+        </ion-item>
+      </ion-list>
+      <ion-list>
+        <ion-item>
+          <ion-label style="display: flex; align-items: center; justify-content: space-between">
+            Pick Time
+            <i class="material-icons md-primary"> &#xe192;</i>
+          </ion-label>
+          <ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" formControlName="time"></ion-datetime>
         </ion-item>
       </ion-list>
     </ion-card-content>
