@@ -210,9 +210,9 @@ export class ReportsService {
   }
 
   generateLabelsForPieChart(selectedStat: any): string[] {
-    if (selectedStat.title === 'shots') return ['On Target', 'Off Target'];
+    if (selectedStat.title === 'shots') return ['% On Target', '% Off Target'];
 
-    return ['Successfull', 'Unsucessfull'];
+    return ['% Successful', '% Unsucessful'];
   }
 
   initializeReports(data) {

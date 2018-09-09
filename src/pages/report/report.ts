@@ -150,6 +150,9 @@ export class ReportPage implements OnInit, OnDestroy {
       this.noDataMessageVisible = true;
       return;
     }
+    const positiveValue = Number(((this.selectedStat.positiveValue / (this.selectedStat.positiveValue + this.selectedStat.negativeValue))*100).toFixed(2));
+    const negativeValue = 100 - positiveValue;
+    
     this.noDataMessageVisible = false;
     this.pieChart = null;
     this.pieCanvas.innerHTML = '';
@@ -159,7 +162,10 @@ export class ReportPage implements OnInit, OnDestroy {
         labels: this.reportsService.generateLabelsForPieChart(this.selectedStat),
         datasets: [{
           label: this.selectedStat.title,
-          data: [this.selectedStat.positiveValue, this.selectedStat.negativeValue],
+          data: [
+            positiveValue, 
+            negativeValue
+          ],
           backgroundColor: [
             'rgba(23, 105, 87, 0.8)',
             'rgba(253, 203, 110, 0.8)'

@@ -117,7 +117,7 @@
         <button ion-button clear>
           <small>{{report.likes.length}} {{report.likes.length == 1 ? 'like' : 'likes'}}</small>
         </button>
-        <button class="spec-stat-btn" style="opacity: 0.5" (click)="likeReport('add')" *ngIf="!alreadyLiked()">
+        <button class="spec-stat-btn" style="opacity: 0.4" (click)="likeReport('add')" *ngIf="!alreadyLiked()">
           <div class="thumb">
             <!-- <ion-badge color="secondary" class="positive-badge">67</ion-badge> -->
             <i class="material-icons md-success md-36">
@@ -135,7 +135,7 @@
         </button>
       </ion-col>
       <ion-col col class="dislike">
-        <button class="spec-stat-btn" style="opacity: 0.5" (click)="dislikeReport('add')" *ngIf="!alreadyDisliked()">
+        <button class="spec-stat-btn" style="opacity: 0.4" (click)="dislikeReport('add')" *ngIf="!alreadyDisliked()">
           <!-- <ion-badge color="primary" class="negative-badge">15</ion-badge> -->
           <div class="thumb">
             <i class="material-icons md-danger md-36">
